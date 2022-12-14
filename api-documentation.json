@@ -1,0 +1,340 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Epaper Service API",
+    "description": "Epaper Service API - Coding task",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local server url"
+    }
+  ],
+  "paths": {
+    "/newspapers/upload": {
+      "description": "Upload XML file",
+      "post": {
+        "summary": "Upload file",
+        "tags": [
+          "Epaper Service"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "description": "File to upload",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/download/{filename}": {
+      "description": "Download uploaded file",
+      "get": {
+        "summary": "Download uploaded file",
+        "tags": [
+          "Epaper Service"
+        ],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newspapers/": {
+      "description": "Get all new with filtration, sorting, pagination",
+      "get": {
+        "summary": "Page of news",
+        "tags": [
+          "Epaper Service"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "FIELD_NAME:OPERATOR",
+              "description": "OPERATORS = `desc` or `asc`"
+            }
+          },
+          {
+            "name": "newspaperName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "The result can be filter by containing string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageableNews"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newspapers/{id}": {
+      "get": {
+        "tags": [
+          "Epaper Service"
+        ],
+        "summary": "Get news by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Epaper Service"
+        ],
+        "summary": "Delete news by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          "requestID": {
+            "type": "string"
+          }
+        }
+      },
+      "NewsModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "newspaperName": {
+            "type": "string"
+          },
+          "screenInfo": {
+            "type": "object",
+            "properties": {
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "dpi": {
+                "type": "integer"
+              }
+            }
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "upload": {
+                "type": "string",
+                "format": "yyyy-MM-dd HH:mm:ss"
+              },
+              "originalFilename": {
+                "type": "string"
+              },
+              "fileLink": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PageableNews": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NewsModel"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "totalNumEntries": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    }
+  }
+}

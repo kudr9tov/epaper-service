@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:14.2
+    restart: always
+    container_name: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_DB: epaper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.2
+
+  onatime-platform:
+    image: kudr9tov1/epaper-service:latest
+    restart: always
+    container_name: epaper-service
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/epaper
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=1
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.3
+    ports:
+      - "8080:8080"
+      - "8200:8200"
+
+networks:
+  app_net:
+    ipam:
+      config:
+        - subnet: "172.28.0.0/16"

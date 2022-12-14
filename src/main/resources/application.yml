@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: epaper-service
+
+service:
+  upload:
+    folder: opt/epaper-service/files
+  download:
+    baseUrl: http://localhost:8080/download

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="epaperRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="deviceInfo">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="screenInfo">
+                                <xs:complexType>
+                                    <xs:attribute type="xs:short" name="width"/>
+                                    <xs:attribute type="xs:short" name="height"/>
+                                    <xs:attribute type="xs:short" name="dpi"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="osInfo">
+                                <xs:complexType>
+                                    <xs:attribute type="xs:string" name="name"/>
+                                    <xs:attribute type="xs:float" name="version"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="appInfo">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="newspaperName"/>
+                                        <xs:element type="xs:float" name="version"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="name"/>
+                        <xs:attribute type="xs:string" name="id"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="getPages">
+                    <xs:complexType>
+                        <xs:attribute type="xs:long" name="editionDefId"/>
+                        <xs:attribute type="xs:date" name="publicationDate"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
