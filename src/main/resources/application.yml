@@ -6,4 +6,4 @@ service:
   upload:
     folder: opt/epaper-service/files
   download:
-    baseUrl: http://localhost:8080/download
+    baseUrl: http://localhost:8080/files/download
